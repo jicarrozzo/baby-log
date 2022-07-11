@@ -1,20 +1,134 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Baby Log
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-grid fixed>
+    <ion-row class="ion-align-items-center ion-justify-content-center">
+      <ion-col size-xs="12" size-lg="10">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+        <ng-container *ngIf="(logs$ |async) as logs">
+          <ion-list>
+            <ion-item-sliding *ngFor="let item of logs">
+              <ion-item detail>
+                <ion-label class="ion-text-wrap">
+                  <ion-text color="primary">
+                    <h3>{{item.start.toDate() | date:'medium'}}</h3>
+                  </ion-text>
+                  <p>{{ item.type }}</p>
+                </ion-label>
+                
+                <ion-icon *ngIf="item.type ==='sleep'" name="bed-outline" slot="end"></ion-icon>
+                <ion-icon *ngIf="item.type ==='wakeup'" name="partly-sunny-outline" slot="end"></ion-icon>
+                <ion-icon *ngIf="item.type ==='feed'" name="fast-food-outline" slot="end"></ion-icon>
+                <ion-icon *ngIf="item.type ==='poop'" name="bonfire-outline" slot="end"></ion-icon>
+                <ion-icon *ngIf="item.type ==='shower'" name="rainy-outline" slot="end"></ion-icon>
+              </ion-item>
+              
+              <ion-item-options side="end">
+                <ion-item-option color="danger">
+                  <ion-icon slot="icon-only" name="trash"(click)="remove(item)"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-list>
+          
+        </ng-container>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+  
+  <ion-modal 
+    trigger="open-modal"
+    [initialBreakpoint]="0.85"
+    [breakpoints]="[0.25, 0.5, 0.85]"
+    [backdropDismiss]="true"
+    (ionModalWillPresent)="loadValues()">
+
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title class="ion-text-center">New Log</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cancel()">
+              <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-accordion-group  [value]="'second'">
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label>{{ logDate | date:'medium'}}</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-datetime #datetimelog [value]="logDate" (ionChange)="logDate =datetimelog.value"></ion-datetime>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="second" >
+            <ion-item slot="header" color="light">
+              <ion-label>Type</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list>
+                <ion-radio-group [(ngModel)]="logType">
+                  
+                  <ion-item>
+                    <ion-label>Sleep</ion-label>
+                    <ion-radio value="sleep"></ion-radio>
+                  </ion-item>
+              
+                  <ion-item>
+                    <ion-label>Woke up</ion-label>
+                    <ion-radio value="wakeup"></ion-radio>
+                  </ion-item>
+              
+                  <ion-item>
+                    <ion-label>Feed</ion-label>
+                    <ion-radio value="feed"></ion-radio>
+                  </ion-item>
+              
+                  <ion-item>
+                    <ion-label>Poop</ion-label>
+                    <ion-radio value="poop"></ion-radio>
+                  </ion-item>
+              
+                  <ion-item>
+                    <ion-label>Shower</ion-label>
+                    <ion-radio value="shower"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-list>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col size="12" class="ion-text-center">
+              <ion-button color="primary" (click)="add()" [disabled]="!ready()" expand="full">
+                Confirm
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        
+        
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="open-modal">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
 </ion-content>
