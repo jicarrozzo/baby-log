@@ -1,53 +1,71 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Baby Log
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="get($event)" pullFactor="0.8" pullMin="60" pullMax="120">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-grid fixed>
     <ion-row class="ion-align-items-center ion-justify-content-center">
       <ion-col size-xs="12" size-lg="10">
 
         <ng-container *ngIf="(logs$ |async) as logs">
           <ion-list>
-            <ion-item-sliding *ngFor="let item of logs">
-              <ion-item detail>
-                <ion-label class="ion-text-wrap">
-                  <ion-text color="primary">
-                    <h3>{{item.start.toDate() | date:'medium'}}</h3>
-                  </ion-text>
-                  <p>{{ item.type }}</p>
-                </ion-label>
-                
-                <ion-icon *ngIf="item.type ==='sleep'" name="bed-outline" slot="end"></ion-icon>
-                <ion-icon *ngIf="item.type ==='wakeup'" name="partly-sunny-outline" slot="end"></ion-icon>
-                <ion-icon *ngIf="item.type ==='feed'" name="fast-food-outline" slot="end"></ion-icon>
-                <ion-icon *ngIf="item.type ==='poop'" name="bonfire-outline" slot="end"></ion-icon>
-                <ion-icon *ngIf="item.type ==='shower'" name="rainy-outline" slot="end"></ion-icon>
-              </ion-item>
+
+            <!-- <ion-card *ngFor="let item of logs">
+              <ion-card-header>
+                <ion-card-title>{{item.id | date:'shortDate'}}</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-label>Last Log: {{ item.lastLog.start.toDate() | date:'shortTime' }} / {{ item.lastLog.type }}</ion-label>
+                  </ion-col>
+                  <ion-col size="12">
+
+                    <ion-chip *ngIf="item.total.sleep" color="primary" mode="ios" outline="true">
+                      <ion-icon name="bed-outline"></ion-icon>
+                      <ion-label>Sleep</ion-label>
+                      <ion-badge>{{item.total.sleep}}</ion-badge>
+                    </ion-chip>
+
+                    
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card> -->
+
+            <ion-item *ngFor="let item of logs">
+              <ion-label class="ion-text-wrap">
+                <ion-text color="primary">
+                  <h3>{{item.start.toDate() | date:'medium'}}</h3>
+                </ion-text>
+                <p>{{ item.type }}</p>
+              </ion-label>
+
+              <ion-icon *ngIf="item.type ==='sleep'" name="bed-outline" slot="end"></ion-icon>
+              <ion-icon *ngIf="item.type ==='wakeup'" name="partly-sunny-outline" slot="end"></ion-icon>
+              <ion-icon *ngIf="item.type ==='feed'" name="fast-food-outline" slot="end"></ion-icon>
+              <ion-icon *ngIf="item.type ==='poop'" name="bonfire-outline" slot="end"></ion-icon>
+              <ion-icon *ngIf="item.type ==='shower'" name="rainy-outline" slot="end"></ion-icon>
+              <ion-icon color="primary" name="ellipsis-vertical" (click)="more(item)" slot="end"></ion-icon>
+            </ion-item>
+            <!-- <ion-item-sliding *ngFor="let item of logs">
+              
               
               <ion-item-options side="end">
                 <ion-item-option color="danger">
                   <ion-icon slot="icon-only" name="trash"(click)="remove(item)"></ion-icon>
                 </ion-item-option>
               </ion-item-options>
-            </ion-item-sliding>
-          </ion-list>
-          
-        </ng-container>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+            </ion-item-sliding> -->
 
-  
-  <ion-modal 
-    trigger="open-modal"
-    [initialBreakpoint]="0.85"
-    [breakpoints]="[0.25, 0.5, 0.85]"
-    [backdropDismiss]="true"
+          </ion-list>
+
+        </ng-container>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-modal trigger="open-modal" [initialBreakpoint]="0.85" [breakpoints]="[0.25, 0.5, 0.85]" [backdropDismiss]="true"
     (ionModalWillPresent)="loadValues()">
 
     <ng-template>
@@ -62,7 +80,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-accordion-group  [value]="'second'">
+        <ion-accordion-group [value]="'second'">
           <ion-accordion value="first">
             <ion-item slot="header" color="light">
               <ion-label>{{ logDate | date:'medium'}}</ion-label>
@@ -71,34 +89,34 @@
               <ion-datetime #datetimelog [value]="logDate" (ionChange)="logDate =datetimelog.value"></ion-datetime>
             </div>
           </ion-accordion>
-          <ion-accordion value="second" >
+          <ion-accordion value="second">
             <ion-item slot="header" color="light">
               <ion-label>Type</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ion-radio-group [(ngModel)]="logType">
-                  
+
                   <ion-item>
                     <ion-label>Sleep</ion-label>
                     <ion-radio value="sleep"></ion-radio>
                   </ion-item>
-              
+
                   <ion-item>
                     <ion-label>Woke up</ion-label>
                     <ion-radio value="wakeup"></ion-radio>
                   </ion-item>
-              
+
                   <ion-item>
                     <ion-label>Feed</ion-label>
                     <ion-radio value="feed"></ion-radio>
                   </ion-item>
-              
+
                   <ion-item>
                     <ion-label>Poop</ion-label>
                     <ion-radio value="poop"></ion-radio>
                   </ion-item>
-              
+
                   <ion-item>
                     <ion-label>Shower</ion-label>
                     <ion-radio value="shower"></ion-radio>
@@ -118,8 +136,8 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-        
-        
+
+
 
       </ion-content>
     </ng-template>
@@ -130,5 +148,5 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  
+
 </ion-content>

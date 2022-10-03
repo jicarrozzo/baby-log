@@ -1,23 +1,41 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "plugins": [
+    "eslint-plugin-expect-type"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "project": ["tsconfig.json", "e2e/tsconfig.json"],
+        "project": [
+          "tsconfig.json",
+          "e2e/tsconfig.json"
+        ],
         "createDefaultProgram": true
       },
+      "plugins": [
+        "eslint-plugin-expect-type"
+      ],
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
         "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:eslint-plugin-expect-type/recommended"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": [
           "error",
           {
-            "suffixes": ["Page", "Component"]
+            "suffixes": [
+              "Page",
+              "Component"
+            ]
           }
         ],
         "@angular-eslint/component-selector": [
@@ -39,8 +57,12 @@
       }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
       "rules": {}
     }
   ]

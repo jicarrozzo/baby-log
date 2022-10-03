@@ -1,3 +1,32 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        Baby Log
+      </ion-title>
+
+      <ng-container *ngIf="user; else elseTemplate">
+        <ion-buttons slot="end">
+          <ion-item button lines="none" (click)="menuActions()" [detail]="false">
+            <ion-avatar slot="start">
+              <img *ngIf="!user.photoURL" src="./assets/avatar.svg">
+              <img *ngIf="user.photoURL" [src]="user.photoURL">
+            </ion-avatar>
+            <ion-label class="username">
+              {{user.displayName?user.displayName: user.email}}
+            </ion-label>
+          </ion-item>
+          <!-- <ion-button (click)="menuActions()">
+            <ion-icon slot="icon-only" name="log-out"></ion-icon>
+          </ion-button> -->
+        </ion-buttons>
+      </ng-container>
+      <ng-template #elseTemplate>
+
+      </ng-template>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
 </ion-app>

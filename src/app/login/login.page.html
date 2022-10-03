@@ -1,0 +1,39 @@
+
+<ion-content class="ion-padding">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col offsetLg="3" sizeLg="6" sizeSm="12">
+        <form #loginForm="ngForm" (ngSubmit)="signinWithEmail(loginForm)">
+          <ion-item fill="solid" class="ion-margin-bottom">
+            <ion-input type="email" placeholder="Email" name="email" ngModel required></ion-input>
+            <ion-note slot="error" *ngIf="(email.dirty || email.touched) && email.errors">Email is invalid</ion-note>
+          </ion-item>
+          <ion-item fill="solid" class="ion-margin-bottom">
+            <ion-input type="password" placeholder="Password" name="password" ngModel required></ion-input>
+            <ion-note slot="error" *ngIf="(password.dirty || password.touched) && password.errors">Password needs to be 6 characters</ion-note>
+          </ion-item>
+        
+      
+          <ion-row>
+            <ion-col size="12">
+              <ion-button type="submit" expand="block" [disabled]="loginForm.invalid">
+                Log in
+              </ion-button>
+            </ion-col>
+            <ion-col size="12">
+              <ion-button type="button" expand="block" color="secondary" (click)="register(loginForm)" [disabled]="loginForm.invalid">
+                Create account
+              </ion-button>
+            </ion-col>
+            <ion-col size="12">
+              <ion-button type="button" color="danger" (click)="signinWithGoogle()" expand="block">
+                Login with Google
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
